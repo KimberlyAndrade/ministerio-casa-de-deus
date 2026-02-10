@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="pt-BR" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Isaías 2026 - Ministério Casa de Deus</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; scroll-behavior: smooth; font-size: 1.1rem; }
+    .font-display { font-family: 'Playfair Display', serif; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .video-banner { transition: all 0.3s ease; border: 1px solid rgba(245, 158, 11, 0.1); background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+    .video-banner:hover { border-color: #f59e0b; transform: translateY(-2px); }
+    .done-section { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 4rem; padding-top: 2rem; }
+    .done-card { opacity: 0.5; background: rgba(30, 41, 59, 0.3) !important; border-color: transparent !important; }
+    .psalm-container { line-height: 1.8; font-size: 1.25rem; }
+    .verse-num { color: #f59e0b; font-size: 0.8rem; vertical-align: top; margin-right: 5px; font-weight: 800; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    #cert-canvas { display: none; }
+  </style>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full">
+
+    <header class="p-8 bg-slate-900 border-b border-white/5">
+      <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+        <div class="flex items-center gap-6">
+          <img src="https://lh3.googleusercontent.com/d/1vvGp_-l_sufDoQxuakicftB-zhFcyAQ3" alt="Logo Ministério Casa de Deus" class="w-32 md:w-40 h-auto">
+          <div>
+            <h1 class="font-display text-4xl md:text-5xl font-black tracking-tighter text-white uppercase">Isaías 2026</h1>
+            <p class="text-[10px] text-slate-400 uppercase tracking-[0.4em] font-bold">Ministério Casa de Deus</p>
+          </div>
+        </div>
+        <div class="flex gap-3 w-full md:w-auto">
+          <a href="https://meet.google.com/off-gnxg-oft" target="_blank" class="flex-1 md:flex-none bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg">SALA MEET</a>
+          <button onclick="showPage('prayer-page')" class="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-bold text-xs shadow-lg">PEDIDOS DE ORAÇÃO</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="home-page" class="min-h-full pb-24">
+      <main class="max-w-4xl mx-auto px-6 py-10" id="home-content"></main>
+      
+      <div id="certificate-section" class="max-w-4xl mx-auto px-6 hidden">
+        <div class="bg-gradient-to-br from-amber-600/20 to-indigo-900/40 p-8 rounded-3xl border-2 border-amber-500/30 text-center shadow-2xl">
+          <span class="text-5xl block mb-4">🎓</span>
+          <h2 class="font-display text-3xl font-bold mb-2 text-amber-400">Parabéns pela Conclusão!</h2>
+          <p class="text-slate-300 mb-8">Você completou o estudo do livro de Isaías. Gere agora seu certificado oficial.</p>
+          <div class="max-w-md mx-auto space-y-4">
+            <input type="text" id="student-name" placeholder="Seu nome completo" class="w-full bg-slate-900 border border-white/20 p-4 rounded-xl text-center outline-none focus:ring-2 focus:ring-amber-500 transition-all text-white">
+            <button id="btn-gen-cert" onclick="generateCertificate()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-900 font-black py-4 rounded-xl shadow-lg transition-all">GERAR CERTIFICADO</button>
+          </div>
+          <div id="cert-preview-container" class="mt-8 hidden">
+            <p class="text-xs text-slate-400 mb-4 uppercase font-bold tracking-widest">Pressione na imagem abaixo para salvar</p>
+            <img id="cert-preview" class="w-full rounded-lg border border-white/10 shadow-2xl" alt="Certificado">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="cert-canvas" width="2000" height="1414"></canvas>
+
+    <div id="lesson-page" class="hidden min-h-full pb-20">
+      <div class="bg-slate-900 border-b border-white/10 p-8">
+        <div class="max-w-4xl mx-auto">
+          <div class="flex justify-between items-center mb-8">
+            <button onclick="showPage('home-page')" class="text-indigo-400 font-bold hover:text-white transition-colors">← VOLTAR</button>
+            <button id="complete-btn" onclick="toggleCompletion()" class="px-6 py-2.5 rounded-full text-[10px] font-black transition-all shadow-lg"></button>
+          </div>
+          <p id="lesson-date" class="text-amber-500 font-bold text-[10px] uppercase tracking-widest mb-1"></p>
+          <h1 id="lesson-title" class="font-display text-3xl font-bold"></h1>
+          <div class="flex gap-6 mt-10 overflow-x-auto no-scrollbar">
+            <button onclick="setTab('psalm')" id="tab-p" class="pb-3 text-xs font-bold border-b-2 transition-all uppercase tracking-widest">Salmo NVI</button>
+            <button onclick="setTab('study')" id="tab-s" class="pb-3 text-xs font-bold border-b-2 transition-all uppercase tracking-widest">Capítulos</button>
+            <button onclick="setTab('prayer')" id="tab-o" class="pb-3 text-xs font-bold border-b-2 transition-all uppercase tracking-widest">Orações</button>
+          </div>
+        </div>
+      </div>
+
+      <main class="max-w-4xl mx-auto p-6">
+        <div id="content-psalm" class="tab-content active">
+          <div class="bg-amber-900/10 p-8 md:p-12 rounded-3xl border border-amber-500/20 shadow-2xl relative">
+            <div class="flex justify-between items-center mb-10 border-b border-amber-500/10 pb-6">
+              <h2 id="psalm-title" class="text-amber-400 text-3xl font-bold font-display"></h2>
+              <a id="psalm-ext-link" target="_blank" class="text-[10px] text-amber-500 underline font-bold uppercase tracking-widest">Bíblia Online ↗</a>
+            </div>
+            <div id="psalm-body" class="text-amber-50/90 psalm-container whitespace-pre-wrap font-serif text-justify"></div>
+          </div>
+        </div>
+
+        <div id="content-study" class="tab-content space-y-6">
+          <div id="chap-list" class="grid grid-cols-1 gap-4"></div>
+          <div class="bg-slate-800/40 p-6 rounded-3xl border border-white/5 text-center mt-12">
+            <h3 class="text-pink-400 font-bold mb-4 uppercase text-[10px] tracking-widest">📸 Foto do Encontro</h3>
+            <div id="photo-box" class="border-2 border-dashed border-white/10 rounded-2xl p-6">
+              <input type="file" id="p-input" class="hidden" accept="image/*" onchange="upPhoto(this)">
+              <div id="p-empty"><button onclick="document.getElementById('p-input').click()" class="bg-pink-600 hover:bg-pink-500 text-white px-8 py-3 rounded-xl font-bold text-xs">CARREGAR FOTO</button></div>
+              <div id="p-filled" class="hidden">
+                <img id="p-img" class="rounded-xl mb-4 max-h-[500px] mx-auto shadow-xl">
+                <button onclick="remPhoto()" class="text-red-400 text-xs font-bold uppercase underline">Remover</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="content-prayer" class="tab-content space-y-10">
+          <div class="bg-slate-800/60 p-8 rounded-3xl border border-white/5 shadow-xl">
+            <h4 class="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-6">Inserir Pedido</h4>
+            <div class="space-y-4">
+              <input type="text" id="lp-user" placeholder="Seu nome" class="w-full bg-slate-900 border border-white/10 p-4 rounded-xl text-sm outline-none">
+              <textarea id="lp-msg" placeholder="Motivo da oração..." class="w-full bg-slate-900 border border-white/10 p-4 rounded-xl text-sm h-32 resize-none outline-none"></textarea>
+              <div class="flex items-center gap-3 ml-2">
+                <input type="checkbox" id="lp-recurring" class="w-5 h-5 rounded bg-slate-900 border-white/10 text-indigo-600">
+                <label for="lp-recurring" class="text-sm text-slate-400">Repetir sempre</label>
+              </div>
+              <button onclick="submitLessonPrayer()" class="w-full bg-indigo-600 hover:bg-indigo-500 py-4 rounded-xl font-bold text-sm">ENVIAR AGORA 🙏</button>
+            </div>
+          </div>
+          <div id="week-prayers" class="space-y-4"></div>
+        </div>
+      </main>
+    </div>
+
+    <div id="prayer-page" class="hidden p-8 max-w-3xl mx-auto">
+      <button onclick="showPage('home-page')" class="text-indigo-400 mb-10 font-bold">← VOLTAR</button>
+      <h1 class="font-display text-4xl font-bold mb-10">Pedidos de Oração</h1>
+      <div id="p-list-global" class="space-y-4"></div>
+    </div>
+  </div>
+
+  <script>
+    const START_DATE = new Date(2026, 1, 10);
+    const TOTAL_WEEKS = 13;
+    const LOGO_URL = "https://lh3.googleusercontent.com/d/1vvGp_-l_sufDoQxuakicftB-zhFcyAQ3";
+
+    // Textos Integrais NVI
+    const PSALMS_NVI = {
+      80: "1 Ó pastor de Israel, ouve-nos! Tu, que conduzes José como a um rebanho; tu, que estás entronizado entre os querubins, resplandece!\n2 Perante Efraim, Benjamim e Manassés, desperta o teu poder e vem salvar-nos!\n3 Restaura-nos, ó Deus; faze resplandecer o teu rosto sobre nós, para que sejamos salvos.\n4 Ó Senhor, Deus dos Exércitos, até quando arderá a tua ira contra as orações do teu povo?\n5 Tu os alimentaste com pão de lágrimas; tu os fizeste beber lágrimas a rodo.\n6 Fizeste de nós um motivo de disputa para os nossos vizinhos, e os nossos inimigos zombam de nós.\n7 Restaura-nos, ó Deus dos Exércitos; faze resplandecer o teu rosto sobre nós, para que sejamos salvos.\n8 Do Egito trouxeste uma videira; expulsaste as nações e a plantaste.\n9 Limpaste o terreno, ela criou raízes e encheu a terra.\n10 Os montes foram cobertos pela sua sombra, e os mais altos cedros pelos seus ramos.\n11 Seus ramos se estenderam até o Mar, e os seus brotos até o Rio.\n12 Por que derrubaste as suas cercas, permitindo que todos os que passam colham as suas uvas?\n13 Javalis da floresta a devastam e as criaturas do campo dela se alimentam.\n14 Volta-te para nós, ó Deus dos Exércitos! Dos altos céus olha e vê! Toma conta desta videira,\n15 da raiz que a tua mão direita plantou, do filho que para ti fizeste crescer.\n16 Tua videira foi cortada e consumida pelo fogo; pela tua repreensão o teu povo perece!\n17 Que a tua mão esteja sobre o homem que colocaste à tua direita, o filho do homem que para ti fizeste crescer.\n18 Então não nos desviaremos de ti; vivifica-nos, e invocaremos o teu nome.\n19 Restaura-nos, ó Senhor, Deus dos Exércitos; faze resplandecer o teu rosto sobre nós, para que sejamos salvos.",
+      81: "1 Cantem de alegria a Deus, nossa força; aclamem o Deus de Jacó!\n2 Comecem o louvor, toquem o tamborim, a lira melodiosa e a harpa.\n3 Toquem a trombeta na lua nova e na lua cheia, no dia da nossa festa;\n4 porque este é um estatuto para Israel, uma ordenança do Deus de Jacó.\n5 Ele o estabeleceu como um memorial para José, quando este avançou contra a terra do Egito. Ouvi ali uma língua que eu não conhecia.\n6 Ele diz: \"Retirei o peso de sobre os seus ombros; as suas mãos ficaram livres dos cestos de carga.\"\n7 Na sua aflição você clamou e eu o livrei; do esconderijo dos trovões eu lhe respondi; eu o testei junto às águas de Meribá.\n8 Ouça, meu povo, as minhas advertências; se tão-somente você me ouvisse, ó Israel!\n9 Não tenha deus estrangeiro em seu meio; não se incline perante nenhum deus estranho.\n10 Eu sou o Senhor, o seu Deus, que o tirei da terra do Egito. Abra bem a sua boca, e eu a celebrarei.\n11 Mas o meu povo não quis ouvir-me; Israel não quis obedecer-me.\n12 Por isso os entreguei aos seus corações obstinados, para seguirem os seus próprios planos.\n13 Se o meu povo apenas me ouvisse, se Israel seguisse os meus caminhos,\n14 com rapidez eu subjugaria os seus inimigos e voltaria a minha mão contra os seus adversários!\n15 Os que odeiam o Senhor se encolheriam diante dele, e o seu castigo seria eterno.\n16 Mas eu sustentaria Israel com o melhor trigo; com o mel da rocha eu o satisfaria.",
+      82: "1 Deus preside a assembleia divina; no meio dos deuses ele profere o seu julgamento: \"Até quando vocês defenderão os injustos e favorecerão os ímpios?\n2 Defendam a causa do fraco e do órfão; mantenham os direitos do necessitado e do oprimido.\n3 Livrem o fraco e o pobre; libertem-nos das mãos dos ímpios.\"\n4 Eles nada sabem, nada entendem. Vagam em trevas; todos os fundamentos da terra estão abalados.\n5 Eu disse: Vocês são deuses; todos vocês são filhos do Altíssimo.\n6 Mas vocês morrerão como simples homens; cairão como qualquer outro governante.\n7 Levanta-te, ó Deus, julga a terra, pois todas as nações te pertencem.",
+      83: "1 Ó Deus, não fiques em silêncio; não te cales, ó Deus, nem fiques imóvel.\n2 Vê como os teus inimigos se agitam, como os teus adversários levantam a cabeça.\n3 Com astúcia tramam contra o teu povo; conspiram contra aqueles que tu proteges.\n4 Dizem: \"Venham, vamos destruí-los como nação, para que o nome de Israel não seja mais lembrado!\"\n5 Com um só propósito conspiram; contra ti fazem aliança.",
+      84: "1 Como é agradável o teu tabernáculo, Senhor dos Exércitos!\n2 A minha alma anseia, e até desfalece pelos átrios do Senhor; o meu coração e o meu corpo cantam de alegria ao Deus vivo.\n3 Até o pardal encontrou casa, e a andorinha um ninho para si, onde coloque os seus filhotes, perto dos teus altares, ó Senhor dos Exércitos, meu Rei e meu Deus.\n4 Como são felizes os que habitam em tua casa; louvam-te continuamente.\n5 Felizes os que em ti encontram sua força, os que fixaram no coração os caminhos da peregrinação.\n6 Ao passarem pelo vale de Baca, fazem dele um lugar de fontes; as chuvas de outono também o cobrem de bênçãos.\n7 Prosseguem com vigor cada vez maior, até que cada um se apresente a Deus em Sião.\n8 Ouve a minha oração, Senhor Deus dos Exércitos; escuta-me, ó Deus de Jacó.\n9 Olha, ó Deus, para o nosso escudo; olha com favor para o rosto do teu ungido.\n10 Melhor é um dia nos teus átrios do que mil noutro lugar; prefiro ficar à porta da casa do meu Deus a habitar nas tendas dos ímpios.\n11 O Senhor Deus é sol e escudo; o Senhor concede favor e honra; não recusa nenhum bem aos que vivem com integridade.\n12 Ó Senhor dos Exércitos, como é feliz aquele que em ti confia!",
+      85: "1 Foste favorável à tua terra, ó Senhor; restauraste o bem-estar de Jacó.\n2 Perdoaste a culpa do teu povo e cobriste todos os seus pecados.\n3 Retiveste toda a tua indignação e te afastaste do furor da tua ira.\n4 Restaura-nos uma vez mais, ó Deus, nosso Salvador, e cancela o teu ressentimento contra nós.\n5 Estarás irritado conosco para sempre? Prolongarás a tua ira por todas as gerações?\n6 Acaso não nos restaurarás a vida, para que o teu povo se alegre em ti?\n7 Mostra-nos o teu amor, Senhor, e concede-nos a tua salvação!\n8 Ouvirei o que Deus, o Senhor, disser; ele promete paz a seu povo, aos seus fiéis; que eles não voltem à insensatez!\n9 Próxima está a sua salvação dos que o temem, para que a sua glória habite em nossa terra.\n10 O amor e a fidelidade se encontrarão; a justiça e a paz se beijarão.\n11 A fidelidade brotará da terra, e a justiça olhará dos céus.\n12 O Senhor dará o que é bom, e a nossa terra produzirá a sua colheita.\n13 A justiça irá adiante dele e preparará o caminho para os seus passos.",
+      86: "1 Inclina os teus ouvidos, Senhor, e responde-me, pois sou pobre e necessitado.\n2 Guarda a minha vida, pois sou fiel a ti. Tu és o meu Deus; salva o teu servo que em ti confia.\n3 Tem misericórdia de mim, Senhor, pois clamo a ti sem cessar.\n4 Alegra o coração do teu servo, pois a ti, Senhor, elevo a minha alma.\n5 Tu és bondoso e perdoador, Senhor, rico em graça para com todos os que te invocam.\n6 Ouve a minha oração, Senhor; atende ao meu clamor por misericórdia.\n7 No dia da minha angústia clamo a ti, pois tu me respondes.\n8 Nenhum dos deuses é comparável a ti, Senhor; nada do que eles fazem pode comparar-se ao que tu fazes.\n9 Todas as nações que tu fizeste virão e te adorarão, Senhor; elas glorificarão o teu nome.\n10 Pois tu és grande e realizas feitos maravilhosos; só tu és Deus.\n11 Ensina-me o teu caminho, Senhor, para que eu ande na tua verdade; dá-me um coração inteiramente fiel, para que eu tema o teu nome.\n12 Louvar-te-ei, Senhor meu Deus, de todo o meu coração; glorificarei o teu nome para sempre.\n13 Pois grande é o teu amor para comigo; tu me livraste das profundezas do Sheol.\n14 Os arrogantes estão me atacando, ó Deus; um bando de homens cruéis procura tirar-me a vida; eles não te dão importância.\n15 Mas tu, Senhor, és Deus compassivo e misericordioso, muito paciente, rico em amor e fidelidade.\n16 Volta-te para mim e tem misericórdia de mim; concede a tua força ao teu servo e salva o filho da tua serva.\n17 Dá-me um sinal da tua bondade, para que os meus inimigos vejam e se envergonhem; pois tu, Senhor, me ajudaste e me consolaste.",
+      87: "1 Ele fundou a sua cidade no monte santo;\n2 o Senhor ama as portas de Sião mais do que qualquer outro lugar em Jacó.\n3 Coisas gloriosas são ditas de ti, ó cidade de Deus!\n4 \"Entre os que me conhecem, incluirei Raabe e Babilônia, além da Filístia, de Tiro e também de Cuxe.\"\n5 De fato, de Sião se dirá: \"Este e aquele nasceram nela, e o próprio Altíssimo a estabelecerá\".\n6 O Senhor escreverá no registro dos povos: \"Este nasceu ali\".\n7 Com danças e cânticos dirão: \"Em ti estão todas as minhas fontes!\"",
+      88: "1 Senhor, Deus que me salva, a ti clamo dia e noite.\n2 Que a minha oração chegue à tua presença; inclina os teus ouvidos ao meu clamor.\n3 A minha vida está cheia de sofrimentos e a minha alma se aproxima da sepultura.\n4 Sou contado entre os que descem à cova; sou como um homem sem forças.\n5 Fui colocado entre os mortos, como os que foram mortos e jazem na sepultura, dos quais já não te lembras, pois foram cortados da tua mão.\n6 Colocaste-me na cova mais profunda, nas trevas das profundezas.\n7 A tua ira pesa sobre mim; com todas as tuas ondas me afligiste.\n8 Afastaste de mim os meus melhores amigos e me tornaste repugnante para eles. Estou como um preso que não pode escapar;\n9 as minhas vistas escurecem de dor. Clamo a ti, Senhor, todos os dias; estendo para ti as minhas mãos.\n10 Acaso mostras as tuas maravilhas aos mortos? Os mortos se levantam e te louvam?\n11 Será que o teu amor é anunciado no túmulo, e a tua fidelidade no Abismo da Morte?\n12 Acaso as tuas maravilhas são conhecidas na região das trevas, e os teus feitos justos na terra do esquecimento?\n13 Mas eu clamo a ti, Senhor, por socorro; de manhã a minha oração chega à tua presença.\n14 Por que, Senhor, me rejeitas e escondes de mim o teu rosto?\n15 Desde a minha juventude tenho sofrido e andado à beira da morte; suportei os teus terrores e estou desesperado.\n16 Sobre mim passou a tua ira; os teus pavores me destruíram.\n17 Cercam-me o dia todo como uma inundação; envolvem-me por completo.\n18 Afastaste de mim os meus amigos e os meus companheiros; as trevas são as minhas únicas amigas.",
+      89: "1 Cantarei para sempre o amor do Senhor; com a minha boca anunciarei a tua fidelidade por todas as gerações.\n2 Sei que o teu amor dura para sempre e que firmaste no céu a tua fidelidade.\n3 Disseste: \"Fiz uma aliança com o meu escolhido, jurei ao meu servo Davi:\n4 'Estabelecerei a sua linhagem para sempre e firmarei o seu trono por todas as gerações'\".\n5 Os céus louvam as tuas maravilhas, Senhor, e a tua fidelidade na assembleia dos santos.\n6 Pois quem nos céus poderá comparar-se ao Senhor? Quem entre os seres celestiais é semelhante ao Senhor?\n7 Na assembleia dos santos Deus é temível; mais do que todos os que o rodeiam ele deve ser reverenciado.\n8 Ó Senhor, Deus dos Exércitos, quem é semelhante a ti? És poderoso, Senhor, envolvido em tua fidelidade.\n9 Tu dominas o revolto mar; quando as suas ondas se levantam, tu as acalmas.\n10 Esmagaste Raabe como se fosse um cadáver; com o teu braço poderoso dispersaste os teus inimigos.\n11 Os céus são teus, e tua também é a terra; fundaste o mundo e tudo o que nele existe.\n12 Criaste o Norte e o Sul; o Tabor e o Hermon cantam de alegria ao teu nome.\n13 O teu braço é poderoso; a tua mão é forte, a tua mão direita é exaltada.\n14 A justiça e o direito são o fundamento do teu trono; o amor e a fidelidade vão à tua frente.\n15 Como é feliz o povo que aprendeu a aclamar-te, Senhor, e anda à luz da tua presença!\n16 Eles se regozijam em teu nome o dia todo e exultam em tua justiça.\n17 Pois tu és a nossa glória e a nossa força, e pelo teu favor exaltas o nosso poder.\n18 Sim, o Senhor é o nosso escudo, o Santo de Israel é o nosso rei.",
+      90: "1 Senhor, tu tens sido o nosso refúgio de geração em geração.\n2 Antes de nascerem os montes e de criares a terra e o mundo, de eternidade a eternidade tu és Deus.\n3 Tu fazes os homens voltarem ao pó, dizendo: \"Retornem ao pó, seres humanos!\"\n4 De fato, mil anos para ti são como o dia de ontem que se foi, como as poucas horas da noite.\n5 Tu arrastas os homens como numa enxurrada; são breves como o sono; são como a erva que brota de manhã,\n6 de manhã brota e floresce, mas à tarde murcha e seca.\n7 Somos consumidos pela tua ira e aterrorizados pelo teu furor.\n8 Conheces as nossas iniquidades; os nossos pecados ocultos não escapam à luz da tua presença.\n9 Todos os nossos dias passam sob o teu furor; terminamos os nossos anos com um gemido.\n10 Os anos de nossa vida chegam a setenta, ou oitenta para os que têm mais vigor; entretanto, o melhor deles é apenas cansaço e enfado, pois a vida passa rápido, e nós voamos.\n11 Quem conhece o poder da tua ira? Pois o teu furor é tão grande quanto o temor que te é devido.\n12 Ensina-nos a contar os nossos dias para que o nosso coração alcance sabedoria.",
+      91: "1 Aquele que habita no abrigo do Altíssimo e descansa à sombra do Todo-poderoso\n2 pode dizer ao Senhor: \"Tu és o meu refúgio e a minha fortaleza, o meu Deus, em quem confio\".\n3 Ele o livrará do laço do caçador e do veneno mortal.\n4 Ele o cobrirá com as suas penas, e sob as suas asas você encontrará refúgio; a fidelidade dele será o seu escudo protetor.\n5 Você não temerá o pavor da noite, nem a flecha que voa de dia.\n6 nem a peste que se move sorrateira nas trevas, nem a praga que devasta ao meio-dia.\n7 Mil poderão cair ao seu lado, dez mil à sua direita, mas nada o atingirá.\n8 Você simplesmente olhará, e verá o castigo dos ímpios.\n9 Se você fizer do Altíssimo o seu refúgio, do Senhor o seu abrigo,\n10 nenhum mal o atingirá, desgraça alguma chegará à sua tenda.\n11 Porque a seus anjos ele dará ordens a seu respeito, para que o guardem em todos os seus caminhos;\n12 com as mãos eles o segurarão, para que você não tropece em alguma pedra.\n13 Você pisará o leão e a cobra; pisoteará o leão forte e a serpente.\n14 \"Porque ele me ama, eu o resgatarei; eu o protegerei, pois conhece o meu nome.\n15 Ele clamará a mim, e eu lhe darei resposta, e na adversidade estarei com ele; vou livrá-lo e cobri-lo de honra.\n16 Vida longa eu lhe darei, e lhe mostrarei a minha salvação\".",
+      92: "1 Como é bom render graças ao Senhor e cantar louvores ao teu nome, ó Altíssimo;\n2 anunciar de manhã o teu amor e de noite a tua fidelidade,\n3 ao som da lira de dez cordas e da cítara, e da melodia da harpa.\n4 Pois tu me alegras, Senhor, com os teus feitos; exulto de alegria pelas obras das tuas mãos.\n5 Quão grandes são as tuas obras, Senhor, quão profundos os teus propósitos!\n6 O homem insensato não entende, o tolo não percebe\n7 que, embora os ímpios brotem como a erva e floresçam todos os malfeitores, eles serão destruídos para sempre.\n8 Mas tu, Senhor, és exaltado para sempre.\n9 Pois os teus inimigos, Senhor, certamente perecerão; todos os malfeitores serão dispersos.\n10 Tu exaltaste o meu poder como o do boi selvagem; óleo novo derramaste sobre mim.\n11 Os meus olhos viram a derrota dos meus inimigos; os meus ouvidos ouviram o lamento dos meus maus agressores.\n12 Os justos florescerão como a palmeira, crescerão como o cedro do Líbano;\n13 plantados na casa do Senhor, florescerão nos átrios do nosso Deus.\n14 Mesmo na velhice darão fruto, permanecerão viçosos e reverdecidos,\n15 para proclamar que o Senhor é justo. Ele é a minha Rocha; nele não há injustiça."
+    };
+
+    const ISA_SUMMARIES = {
+      1: "O Senhor denuncia a rebeldia de Israel.", 6: "A visão da glória de Deus e o chamado de Isaías.", 7: "O sinal de Emanuel.", 9: "O Menino Rei e o castigo de Israel.", 11: "A profecia sobre o Ramo de Jessé.", 40: "Mensagem de consolo e a grandeza de Deus.", 53: "O Servo Sofredor e o sacrifício vicário.", 61: "A unção do Messias para libertar.", 66: "A glória final de Deus e a nova criação."
+    };
+
+    let done = JSON.parse(localStorage.getItem('isa_done')) || [];
+    let photos = JSON.parse(localStorage.getItem('isa_photos')) || {};
+    let prayers = JSON.parse(localStorage.getItem('isa_prayers')) || [];
+    let cur = null;
+
+    function showPage(id) {
+      document.querySelectorAll('#app > div').forEach(d => d.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      if(id === 'prayer-page') renderGlobalPrayers();
+      window.scrollTo(0,0);
+    }
+
+    function renderSchedule() {
+      const container = document.getElementById('home-content');
+      container.innerHTML = "";
+      let currentChapter = 1;
+      let items = [];
+
+      for(let i=0; i<TOTAL_WEEKS; i++) {
+        let start = currentChapter;
+        let end = (i === 7) ? 39 : (i === 8 ? 45 : (i === 12 ? 66 : Math.min(start + 4, 66)));
+        const date = new Date(START_DATE); date.setDate(date.getDate() + (i*7));
+        const id = `isa-${start}`;
+        items.push({ i, start, end, date, id, isDone: done.includes(id) });
+        currentChapter = end + 1;
+      }
+
+      const activeItems = items.filter(l => !l.isDone);
+      const finishedItems = items.filter(l => l.isDone);
+
+      container.innerHTML += createBanner("Isaías Parte 1: Cap. 1-39", "https://www.youtube.com/watch?v=EZ5LTlriVLs");
+      activeItems.filter(l => l.i < 8).forEach(l => container.innerHTML += createCard(l));
+      
+      container.innerHTML += createBanner("Isaías Parte 2: Cap. 40-66", "https://www.youtube.com/watch?v=tAWKUvWe5JI");
+      activeItems.filter(l => l.i >= 8).forEach(l => container.innerHTML += createCard(l));
+
+      if(finishedItems.length > 0) {
+        const div = document.createElement('div');
+        div.className = "done-section";
+        div.innerHTML = "<h3 class='text-sm font-black text-slate-500 uppercase tracking-widest mb-6 ml-2'>Aulas Concluídas</h3>";
+        finishedItems.forEach(l => div.innerHTML += createCard(l));
+        container.appendChild(div);
+      }
+
+      if(done.length >= TOTAL_WEEKS) document.getElementById('certificate-section').classList.remove('hidden');
+    }
+
+    function createBanner(title, url) {
+      return `<a href="${url}" target="_blank" class="block mb-6 p-8 rounded-3xl video-banner shadow-2xl relative overflow-hidden group transition-all"><div class="absolute top-0 right-0 p-6 opacity-5 text-7xl group-hover:scale-110 transition-transform">🎬</div><h2 class="text-2xl font-bold text-white mb-2">${title}</h2><div class="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase underline">Ver no YouTube ↗</div></a>`;
+    }
+
+    function createCard(l) {
+      const isToday = l.date.toDateString() === new Date().toDateString();
+      return `<div onclick="openLesson(${l.start}, ${l.end}, ${l.i}, '${l.date.toISOString()}')" class="p-6 rounded-2xl bg-slate-800 border-2 cursor-pointer flex justify-between items-center transition-all mb-3 ${l.isDone ? 'done-card' : 'border-white/5 hover:border-amber-500/40 hover:bg-slate-700 shadow-xl'}"><div><span class="text-[10px] font-bold text-slate-500">SEMANA ${l.i+1}</span><h4 class="font-bold text-xl">Isaías ${l.start}-${l.end}</h4><p class="text-[10px] text-slate-500">${l.date.toLocaleDateString('pt-BR')}</p></div>${isToday && !l.isDone ? '<span class="bg-amber-500 text-black px-3 py-1 rounded-full text-[9px] font-black">HOJE</span>' : (l.isDone ? '✅' : '➡️')}</div>`;
+    }
+
+    function openLesson(start, end, idx, dateStr) {
+      cur = { start, end, idx, id: `isa-${start}`, date: new Date(dateStr) };
+      showPage('lesson-page');
+      document.getElementById('lesson-title').textContent = `Isaías ${start}-${end}`;
+      document.getElementById('lesson-date').textContent = cur.date.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+      document.getElementById('psalm-title').textContent = `Salmo ${80 + idx}`;
+      document.getElementById('psalm-body').innerHTML = PSALMS_NVI[80 + idx] || "Salmo integral na versão NVI disponível em sua Bíblia.";
+      document.getElementById('psalm-ext-link').href = `https://www.bibliaonline.com.br/nvi/sl/${80 + idx}`;
+      
+      const list = document.getElementById('chap-list'); list.innerHTML = '';
+      for(let c=start; c<=end; c++) {
+        list.innerHTML += `<div class="bg-slate-900/50 p-5 rounded-2xl border border-white/5 flex justify-between items-center mb-2"><span class="text-sm font-bold text-amber-500 uppercase">Capítulo ${c}</span><a href="https://www.bibliaonline.com.br/nvi/is/${c}" target="_blank" class="bg-indigo-600/20 text-indigo-400 px-3 py-1 rounded-lg text-[10px] font-bold hover:bg-indigo-600 hover:text-white transition-all">LER COMPLETO ↗</a></div>`;
+      }
+      renderLessonPrayers(dateStr);
+      updateLessonUI();
+      setTab('psalm');
+      window.scrollTo(0,0);
+    }
+
+    // GERAÇÃO DE CERTIFICADO COM LOGO PROPORCIONAL E CENTRALIZADO
+    function generateCertificate() {
+      const name = document.getElementById('student-name').value.trim();
+      if(!name) return alert("Por favor, insira seu nome completo.");
+
+      const canvas = document.getElementById('cert-canvas');
+      const ctx = canvas.getContext('2d');
+      const logo = new Image();
+      logo.crossOrigin = "anonymous"; 
+      logo.src = LOGO_URL;
+
+      logo.onload = () => {
+        // Limpa e Prepara Fundo
+        ctx.fillStyle = "#0f172a";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Bordas
+        ctx.strokeStyle = "#f59e0b";
+        ctx.lineWidth = 40; 
+        ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
+
+        // LOGO CENTRALIZADO COM PROPORÇÃO
+        const targetWidth = 400;
+        const ratio = logo.width / logo.height;
+        const targetHeight = targetWidth / ratio;
+        const logoX = (canvas.width - targetWidth) / 2;
+        const logoY = 100; // Posição fixa no topo
+
+        ctx.drawImage(logo, logoX, logoY, targetWidth, targetHeight);
+
+        // Textos
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#ffffff";
+        
+        // Nome da Igreja (abaixo do logo)
+        ctx.font = "italic 40px Inter"; 
+        ctx.fillText("Ministério Casa de Deus", canvas.width/2, logoY + targetHeight + 60);
+
+        ctx.font = "bold 100px Playfair Display"; 
+        ctx.fillStyle = "#f59e0b"; 
+        ctx.fillText("CERTIFICADO DE CONCLUSÃO", canvas.width/2, logoY + targetHeight + 200);
+
+        ctx.font = "40px Inter"; ctx.fillStyle = "#94a3b8";
+        ctx.fillText("Certificamos que", canvas.width/2, logoY + targetHeight + 300);
+
+        ctx.font = "bold 90px Playfair Display"; ctx.fillStyle = "#ffffff";
+        ctx.fillText(name.toUpperCase(), canvas.width/2, logoY + targetHeight + 410);
+
+        ctx.font = "40px Inter"; ctx.fillStyle = "#94a3b8";
+        ctx.fillText("concluiu com êxito o", canvas.width/2, logoY + targetHeight + 510);
+
+        ctx.font = "bold 55px Inter"; ctx.fillStyle = "#f59e0b";
+        ctx.fillText("Discipulado e Estudo Bíblico do Livro de Isaías", canvas.width/2, logoY + targetHeight + 600);
+
+        ctx.font = "30px Inter"; ctx.fillStyle = "#64748b";
+        ctx.fillText(`Concluído em ${new Date().toLocaleDateString('pt-BR')} • Jornada Isaías 2026`, canvas.width/2, 1320);
+
+        document.getElementById('cert-preview').src = canvas.toDataURL('image/png');
+        document.getElementById('cert-preview-container').classList.remove('hidden');
+      };
+      
+      logo.onerror = () => {
+          alert("Erro ao carregar o logo para o certificado. Verifique a conexão.");
+      };
+    }
+
+    function toggleCompletion() {
+      const idx = done.indexOf(cur.id);
+      if(idx > -1) done.splice(idx, 1); else done.push(cur.id);
+      localStorage.setItem('isa_done', JSON.stringify(done));
+      updateLessonUI(); renderSchedule();
+    }
+
+    function updateLessonUI() {
+      const isDone = done.includes(cur.id);
+      const btn = document.getElementById('complete-btn');
+      btn.textContent = isDone ? '✓ CONCLUÍDA' : 'MARCAR CONCLUÍDA';
+      btn.className = `px-6 py-2.5 rounded-full text-[10px] font-black transition-all ${isDone ? 'bg-emerald-600 text-white' : 'bg-white/10 text-white'}`;
+      const photo = photos[cur.id];
+      document.getElementById('p-empty').style.display = photo ? 'none' : 'block';
+      document.getElementById('p-filled').style.display = photo ? 'block' : 'none';
+      if(photo) document.getElementById('p-img').src = photo;
+    }
+
+    function upPhoto(input) {
+      if(input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => { photos[cur.id] = e.target.result; localStorage.setItem('isa_photos', JSON.stringify(photos)); updateLessonUI(); };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function remPhoto() { delete photos[cur.id]; localStorage.setItem('isa_photos', JSON.stringify(photos)); updateLessonUI(); }
+
+    function setTab(t) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('content-' + t).classList.add('active');
+    }
+
+    function submitLessonPrayer() {
+      const n = document.getElementById('lp-user').value;
+      const m = document.getElementById('lp-msg').value;
+      const r = document.getElementById('lp-recurring').checked;
+      if(!n || !m) return;
+      const p = { id: Date.now().toString(), name: n, text: m, target_aula: cur.date.toISOString(), recurring: r };
+      prayers.unshift(p); localStorage.setItem('isa_prayers', JSON.stringify(prayers));
+      renderLessonPrayers(cur.date.toISOString());
+    }
+
+    function deletePrayer(id) {
+      if(!confirm("Excluir?")) return;
+      prayers = prayers.filter(p => p.id.toString() !== id.toString());
+      localStorage.setItem('isa_prayers', JSON.stringify(prayers));
+      if(!document.getElementById('lesson-page').classList.contains('hidden')) renderLessonPrayers(cur.date.toISOString());
+    }
+
+    function renderLessonPrayers(dateStr) {
+      const d = new Date(dateStr);
+      const filtered = prayers.filter(p => (new Date(p.target_aula).toDateString() === d.toDateString()) || (p.recurring && new Date(p.target_aula) <= d));
+      const container = document.getElementById('week-prayers');
+      container.innerHTML = filtered.map(p => `<div class="bg-white/5 p-4 rounded-2xl border border-white/10 flex justify-between items-center mb-2"><div><p class="font-bold text-indigo-400 text-xs">${p.name}</p><p class="text-white/80 text-sm">${p.text}</p></div><button onclick="deletePrayer('${p.id}')" class="text-red-500 opacity-50">🗑️</button></div>`).join('');
+    }
+
+    function renderGlobalPrayers() {
+      document.getElementById('p-list-global').innerHTML = prayers.map(p => `<div class="bg-slate-800 p-5 rounded-2xl border-l-8 border-indigo-600 flex justify-between items-center mb-2"><div class="flex-1"><h5 class="font-bold text-indigo-300 text-xs uppercase">${p.name} ${p.recurring ? '🔄' : ''}</h5><p class="text-white/70 text-sm">${p.text}</p></div><button onclick="deletePrayer('${p.id}')" class="ml-4 text-red-500">🗑️</button></div>`).join('');
+    }
+
+    renderSchedule();
+  </script>
+ </body>
+</html>
